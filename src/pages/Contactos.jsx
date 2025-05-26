@@ -51,7 +51,7 @@ const [formData, setFormData] = useState({
           />
         </div>
         <div>
-          <label className="block text-gray-300 font-medium mb-1">Email</label>
+          <label className="block text-gray-400 font-medium mb-1">Email</label>
           <input
             type="email"
             name="email"
@@ -64,7 +64,7 @@ const [formData, setFormData] = useState({
         <textarea className="w-full bg-white px-4 py-2 border border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300" name="text" id="descripcion"></textarea>
         <button
           type="submit"
-          className="w-full  bg-gray-500 hover:text-yellow-300 text-white font-bold py-2 px-4 rounded-md transition duration-300"
+          className="w-full  bg-gray-500 hover:text-yellow-400 text-white font-bold py-2 px-4 rounded-md transition duration-300"
         >
           Enviar
         </button>
