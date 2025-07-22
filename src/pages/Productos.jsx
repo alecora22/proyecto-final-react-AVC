@@ -1,81 +1,61 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { CarritoContext } from "../context/CarritoContext";
 
+function Productos() {
+  const { agregarAlCarrito } = useContext(CarritoContext);
+  const [productos, setProductos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
- function Productos() {
- const emojiCheck = String.fromCodePoint(0x2713)
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProductos(data);
+        setCargando(false);
+      })
+      .catch(() => {
+        setError("Hubo un problema al cargar los productos.");
+        setCargando(false);
+      });
+  }, []);
 
-  const handelClik = ()=>{
-    alert(`su producto fue agregado al carrito `,{emojiCheck})
-  }
+  const handleClick = (producto) => {
+    agregarAlCarrito(producto);
+    alert("✅ Producto agregado al carrito");
+  };
 
-     const [productos, setProductos] = useState([]);
-     const [cargando, setCargando] = useState(true);
-     const [error, setError] = useState(null); 
+  if (cargando) return <p className="text-center mt-20 text-xl">Cargando productos...</p>;
+  if (error) return <p className="text-red-500 text-center mt-10">{error}</p>;
 
-
-     useEffect(() => {
-       fetch("https://fakestoreapi.com/products")
-         .then((res) => res.json())
-
-         .then((data) => {
-           setProductos(data);
-           
-           setCargando(false);
-         })
-
-         .catch((err) => {
-           setError("Hubo un problema al cargar los productos.",err);
-           setCargando(false);
-         });
-     },[]);                                                                   
-
-     if (cargando) return <p className="text-2xl flex justify-center items-center text-center mt-20">Cargando productos...</p>;
-     if (error) return <p>{error}</p>; 
-
-
-
-
-   
   return (
-    <section>
-       <h3 className="text-center mt-8 text-2xl text-bond">Todos los Productos </h3>
+    <section className="p-6">
+      <h3 className="text-center mt-8 text-2xl font-bold">Todos los Productos</h3>
 
-       <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" >
-     
-      {productos.map((items) => (
-        <div className="grid grid-col-1 gap-8 m-4 md:grid-col-4 gap-4 ">
-            <div key={items.id} >
-          <div className= "border overflow-hidden flex flex-col">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+        {productos.map((item) => (
+          <div key={item.id} className="border p-4 rounded shadow bg-white">
             <img
-              src={items.image}
-              alt="Producto 1"
-               className="object-contain  h-50 p-5 ms-8 overflow-hidden flex flex-col"
+              src={item.image}
+              alt={item.title}
+              className="h-40 object-contain mx-auto mb-4"
             />
-            <div className="p-4 ">
-              <h3 className="text-lg font-bold text-gray-800 text-center">
-                {items.title}
-              </h3>
-              <div className="flex justify-between mt-5">
-                 <p className="text-yellow-500 font-bold mt-2 text-xl ">$ {items.price}</p>
-                 <button className="bg-gray-800 text-yellow-400 p-3 rounded-lg" onClick={handelClik}> Comprar</button>
-              </div>
-             
+            <h3 className="text-lg font-semibold text-gray-800 text-center">{item.title}</h3>
+            <div className="flex justify-between mt-4 items-center">
+              <p className="text-yellow-500 font-bold text-xl">${item.price}</p>
+              <button
+                className="bg-gray-800 text-yellow-400 px-3 py-1 rounded hover:bg-gray-700"
+                onClick={() => handleClick(item)}
+              >
+                Comprar
+              </button>
             </div>
-
           </div>
-        </div>
-        </div>
-      
-      ))}
-    </div>
+        ))}
+      </div>
     </section>
-   
   );
-} 
- 
+}
 
-    
- 
-
- export default Productos;
+export default Productos;
